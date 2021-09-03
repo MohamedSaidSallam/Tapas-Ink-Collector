@@ -28,12 +28,12 @@ def isColorEqual(color1, color2):
 
 
 def pullForPixel(x, y, color, sleepAmount=0.5):
-    pulling = True
-    while pulling:
-        time.sleep(sleepAmount)
+    while True:
         pixel = getPixel(x, y)
         print(pixel)
-        pulling = not isColorEqual(pixel, color)
+        if isColorEqual(pixel, color):
+            break
+        time.sleep(sleepAmount)
 
 
 def tap(location):
