@@ -36,6 +36,11 @@ def pullForPixel(x, y, color, sleepAmount=0.5):
         time.sleep(sleepAmount)
 
 
+def pullForPixelKey(locationKey, colorKey, **kargs):
+    pullForPixel(*config["locations"][locationKey],
+                 config["colors"][colorKey], **kargs)
+
+
 def tap(location):
     device.shell(f'input tap {location[0]} {location[1]}')
 
@@ -61,8 +66,8 @@ device.shell(
     f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
 
 print('waiting for splash screen')
-pullForPixel(*config["locations"]["menuButton"],
-             config["colors"]["menuButtonBackground"])
+pullForPixelKey("menuButton",
+                "menuButtonBackground")
 
 tapLocaltion("menuButton")
 
@@ -70,16 +75,16 @@ tapLocaltion("freeInk")
 
 while True:
     print('waiting for watch video')
-    pullForPixel(*config["locations"]['watchVideoButton'],
-                 config["colors"]["watchVideoButtonBackground"])
+    pullForPixelKey('watchVideoButton',
+                    "watchVideoButtonBackground")
 
     tapLocaltion('watchVideoButton')
 
     time.sleep(2.5)
     if isColorEqual(getPixel(*config["locations"]['watchVideoButton']), config["colors"]["background"]):
         print('waiting for no offers')
-        pullForPixel(*config["locations"]['watchVideoButton'],
-                     config["colors"]["watchVideoButtonBackground"], sleepAmount=1)
+        pullForPixelKey('watchVideoButton',
+                        "watchVideoButtonBackground", sleepAmount=1)
 
         tapLocaltion('watchVideoButton')
 
@@ -92,8 +97,8 @@ while True:
     print('waiting for ad to end: Done')
 
     print('waiting to claim ink')
-    pullForPixel(*config["locations"]["claimInk"],
-                 config["colors"]["claimInkBackground"])
+    pullForPixelKey("claimInk",
+                    "claimInkBackground")
 
     tapLocaltion("claimInk")
 
