@@ -1,3 +1,4 @@
+import datetime
 import os
 import time
 
@@ -61,17 +62,26 @@ if len(devices) == 0:
 device = devices[0]
 
 
-print('launching app')
-device.shell(
-    f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
+def launchSequence():
+    print('launching app')
+    device.shell(
+        f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
 
-print('waiting for splash screen')
-pullForPixelKey("menuButton",
-                "menuButtonBackground")
+    print('waiting for splash screen')
+    pullForPixelKey("menuButton",
+                    "menuButtonBackground")
 
-tapLocaltion("menuButton")
+    tapLocaltion("menuButton")
 
-tapLocaltion("freeInk")
+    tapLocaltion("freeInk")
+
+
+launchSequence()
+
+timesDone = 0
+startHour = datetime.datetime.now().hour
+resetPeriod = 60 * 60  # one hour
+maxTimes = 30
 
 while True:
     print('waiting for watch video')
@@ -102,6 +112,10 @@ while True:
 
     tapLocaltion("claimInk")
 
-
-# todo hourly limit
-# todo hourly limit refersh stack view
+    timesDone += 1
+    print(timesDone)
+    print(timesDone == maxTimes, startHour != datetime.datetime.now().hour)
+    if timesDone == maxTimes or startHour != datetime.datetime.now().hour:
+        startHour = datetime.datetime.now().hour
+        timesDone = 0
+        launchSequence()
