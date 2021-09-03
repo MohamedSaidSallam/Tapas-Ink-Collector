@@ -40,6 +40,11 @@ def tap(location):
     device.shell(f'input tap {location[0]} {location[1]}')
 
 
+def tapLocaltion(key):
+    print(f'tapping {key}')
+    tap(config["locations"][key])
+
+
 adb = AdbClient(host=config["adb"]["host"], port=config["adb"]["port"])
 
 devices = adb.devices()
@@ -59,19 +64,16 @@ print('waiting for splash screen')
 pullForPixel(*config["locations"]["menuButton"],
              config["colors"]["menuButtonBackground"])
 
-print('hitting menu button')
-tap(config["locations"]["menuButton"])
+tapLocaltion("menuButton")
 
-print('hitting free ink')
-tap(config["locations"]["freeInk"])
+tapLocaltion("freeInk")
 
 while True:
     print('waiting for watch video')
     pullForPixel(*config["locations"]['watchVideoButton'],
                  config["colors"]["watchVideoButtonBackground"])
 
-    print('hitting watch video')
-    tap(config["locations"]['watchVideoButton'])
+    tapLocaltion('watchVideoButton')
 
     time.sleep(2.5)
     if isColorEqual(getPixel(*config["locations"]['watchVideoButton']), config["colors"]["background"]):
@@ -79,14 +81,13 @@ while True:
         pullForPixel(*config["locations"]['watchVideoButton'],
                      config["colors"]["watchVideoButtonBackground"], sleepAmount=1)
 
-        print('hitting watch video')
-        tap(config["locations"]['watchVideoButton'])
+        tapLocaltion('watchVideoButton')
 
     print('waiting for ad to end')
 
     time.sleep(config["adSleepAmount"])
     device.shell(f'input keyevent 4')  # go back
-    tap(config["locations"]['adClose'])  # close ad
+    tapLocaltion('adClose')  # close ad
 
     print('waiting for ad to end: Done')
 
@@ -94,8 +95,7 @@ while True:
     pullForPixel(*config["locations"]["claimInk"],
                  config["colors"]["claimInkBackground"])
 
-    print('claiming ink')
-    tap(config["locations"]["claimInk"])
+    tapLocaltion("claimInk")
 
 
 # todo hourly limit
