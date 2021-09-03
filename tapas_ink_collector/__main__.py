@@ -1,27 +1,10 @@
 import datetime
-import os
 import time
 
-import numpy
-from PIL import Image
 from ppadb.client import Client as AdbClient
 
 from tapas_ink_collector.config_loader import config
-
-os.makedirs(config["outputFolder"], exist_ok=True)
-TEMP_IMG_PATH = f'{config["outputFolder"]}/screen.png'
-
-
-def getPixel(x, y):
-    image = device.screencap()
-
-    with open(TEMP_IMG_PATH, 'wb') as f:
-        f.write(image)
-
-    image = Image.open(TEMP_IMG_PATH)
-    image = numpy.array(image, dtype=numpy.uint8)
-
-    return image[y][x]
+from tapas_ink_collector.getpixel import getPixel
 
 
 def isColorEqual(color1, color2):
@@ -30,7 +13,7 @@ def isColorEqual(color1, color2):
 
 def pullForPixel(x, y, color, sleepAmount=0.5):
     while True:
-        pixel = getPixel(x, y)
+        pixel = getPixel(device, x, y)
         print(pixel)
         if isColorEqual(pixel, color):
             break
@@ -91,7 +74,7 @@ while True:
     tapLocaltion('watchVideoButton')
 
     time.sleep(2.5)
-    if isColorEqual(getPixel(*config["locations"]['watchVideoButton']), config["colors"]["background"]):
+    if isColorEqual(getPixel(device, *config["locations"]['watchVideoButton']), config["colors"]["background"]):
         print('waiting for no offers')
         pullForPixelKey('watchVideoButton',
                         "watchVideoButtonBackground", sleepAmount=1)
