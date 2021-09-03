@@ -1,5 +1,3 @@
-import os
+from tapas_ink_collector.config_loader import loadConfig
 
-OUTPUT_FOLDER = 'output'
-
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+loadConfig()

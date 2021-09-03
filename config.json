@@ -1,0 +1,53 @@
+{
+    "outputFolder": "output",
+    "adb": {
+        "host": "127.0.0.1",
+        "port": 5037
+    },
+    "appName": "com.tapastic",
+    "colors": {
+        "menuButtonBackground": [
+            33,
+            33,
+            33
+        ],
+        "watchVideoButtonBackground": [
+            117,
+            117,
+            117
+        ],
+        "background": [
+            33,
+            33,
+            33
+        ],
+        "claimInkBackground": [
+            160,
+            221,
+            175
+        ]
+    },
+    "locations": {
+        "menuButton": [
+            1079,
+            1919
+        ],
+        "freeInk": [
+            150,
+            640
+        ],
+        "watchVideoButton": [
+            974,
+            1125
+        ],
+        "adClose": [
+            1015,
+            62
+        ],
+        "claimInk": [
+            606,
+            1169
+        ]
+    },
+    "adSleepAmount": 50
+}

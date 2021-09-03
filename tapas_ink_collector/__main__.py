@@ -1,17 +1,23 @@
+import os
 import time
 
 import numpy
 from PIL import Image
 from ppadb.client import Client as AdbClient
 
+from tapas_ink_collector.config_loader import config
+
+os.makedirs(config["outputFolder"], exist_ok=True)
+TEMP_IMG_PATH = f'{config["outputFolder"]}/screen.png'
+
 
 def getPixel(x, y):
     image = device.screencap()
 
-    with open('output/screen.png', 'wb') as f:
+    with open(TEMP_IMG_PATH, 'wb') as f:
         f.write(image)
 
-    image = Image.open('output/screen.png')
+    image = Image.open(TEMP_IMG_PATH)
     image = numpy.array(image, dtype=numpy.uint8)
 
     return image[y][x]
@@ -30,7 +36,11 @@ def pullForPixel(x, y, color, sleepAmount=0.5):
         pulling = not isColorEqual(pixel, color)
 
 
-adb = AdbClient(host="127.0.0.1", port=5037)
+def tap(location):
+    device.shell(f'input tap {location[0]} {location[1]}')
+
+
+adb = AdbClient(host=config["adb"]["host"], port=config["adb"]["port"])
 
 devices = adb.devices()
 
@@ -42,45 +52,50 @@ device = devices[0]
 
 
 print('launching app')
-device.shell(f'monkey -p com.tapastic -c android.intent.category.LAUNCHER 1')
-
-width, height = device.shell(f'wm size').split()[-1].split('x')
+device.shell(
+    f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
 
 print('waiting for splash screen')
-pullForPixel(int(width) - 1, int(height) - 1, [33, 33, 33])
+pullForPixel(*config["locations"]["menuButton"],
+             config["colors"]["menuButtonBackground"])
 
 print('hitting menu button')
-device.shell(f'input tap {int(width) -1} {int(height) - 1}')
+tap(config["locations"]["menuButton"])
 
 print('hitting free ink')
-device.shell(f'input tap 150 640')
+tap(config["locations"]["freeInk"])
 
 while True:
     print('waiting for watch video')
-    pullForPixel(925, 1125, [238, 238, 238])
+    pullForPixel(*config["locations"]['watchVideoButton'],
+                 config["colors"]["watchVideoButtonBackground"])
 
     print('hitting watch video')
-    device.shell(f'input tap 937 1112')
+    tap(config["locations"]['watchVideoButton'])
+
     time.sleep(2.5)
-    if isColorEqual(getPixel(302, 1096), [58, 58, 58]):
+    if isColorEqual(getPixel(*config["locations"]['watchVideoButton']), config["colors"]["background"]):
         print('waiting for no offers')
-        pullForPixel(925, 1125, [238, 238, 238], sleepAmount=1)
+        pullForPixel(*config["locations"]['watchVideoButton'],
+                     config["colors"]["watchVideoButtonBackground"], sleepAmount=1)
 
         print('hitting watch video')
-        device.shell(f'input tap 937 1112')
-
+        tap(config["locations"]['watchVideoButton'])
 
     print('waiting for ad to end')
-    time.sleep(50)
-    print(device.shell(f'input keyevent 4'))  # go back
-    device.shell(f'input tap 1015 62')
+
+    time.sleep(config["adSleepAmount"])
+    device.shell(f'input keyevent 4')  # go back
+    tap(config["locations"]['adClose'])  # close ad
+
     print('waiting for ad to end: Done')
 
     print('waiting to claim ink')
-    pullForPixel(606, 1169, [160, 221, 175])
+    pullForPixel(*config["locations"]["claimInk"],
+                 config["colors"]["claimInkBackground"])
 
     print('claiming ink')
-    device.shell(f'input tap 606 1169')
+    tap(config["locations"]["claimInk"])
 
 
 # todo hourly limit
