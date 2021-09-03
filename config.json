@@ -49,5 +49,6 @@
             1169
         ]
     },
-    "adSleepAmount": 50
+    "adSleepAmount": 50,
+    "maxTimes": 30
 }

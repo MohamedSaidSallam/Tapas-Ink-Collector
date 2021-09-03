@@ -63,8 +63,7 @@ launchSequence()
 
 timesDone = 0
 startHour = datetime.datetime.now().hour
-resetPeriod = 60 * 60  # one hour
-maxTimes = 30
+maxTimes = config["maxTimes"]
 
 while True:
     print('waiting for watch video')
