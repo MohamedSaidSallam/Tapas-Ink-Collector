@@ -73,8 +73,13 @@ while True:
 
     tapLocaltion('watchVideoButton')
 
-    time.sleep(2.5)
-    if isColorEqual(getPixel(device, *config["locations"]['watchVideoButton']), config["colors"]["background"]):
+    time.sleep(0.5)
+    buttonColor = getPixel(device, *config["locations"]['watchVideoButton'])
+
+    if isColorEqual(buttonColor, config["colors"]["watchVideoButtonBackground"]):
+        print('button still there, tapping again')
+        tapLocaltion('watchVideoButton')
+    elif isColorEqual(buttonColor, config["colors"]["background"]):
         print('waiting for no offers')
         pullForPixelKey('watchVideoButton',
                         "watchVideoButtonBackground", sleepAmount=1)
