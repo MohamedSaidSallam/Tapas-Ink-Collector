@@ -50,6 +50,7 @@ def launchSequence():
     device.shell(
         f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
 
+    time.sleep(1) # wait for splash screen to appear in case the app was already open
     print('waiting for splash screen')
     pullForPixelKey("menuButton",
                     "menuButtonBackground")
