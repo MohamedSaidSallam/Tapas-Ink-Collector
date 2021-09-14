@@ -95,9 +95,23 @@ while True:
     tapLocaltion("claimInk")
 
     timesDone += 1
-    print(timesDone)
-    print(timesDone == maxTimes, startHour != datetime.datetime.now().hour)
-    if timesDone == maxTimes or startHour != datetime.datetime.now().hour:
+    print('timesDone', timesDone)
+
+    currentTime = datetime.datetime.now()
+    print('Restart Conditions: ')
+    print('startHour != currentTime.hour', startHour != currentTime.hour)
+    print('timesDone == maxTimes', timesDone == maxTimes)
+
+    if startHour != currentTime.hour:
+        startHour = currentTime.hour
+        timesDone = 0
+        launchSequence()
+    elif timesDone == maxTimes:
+        nextHour = datetime.datetime(
+            currentTime.year, currentTime.month, currentTime.day + ((startHour+1) // 24), (startHour+1) % 24)
+        sleepTime = (nextHour - currentTime).total_seconds()
+        print(f'Sleeping for {sleepTime}s')
+        time.sleep(sleepTime)
         startHour = datetime.datetime.now().hour
         timesDone = 0
         launchSequence()
