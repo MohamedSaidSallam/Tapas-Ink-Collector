@@ -1,4 +1,5 @@
 import datetime
+import sys
 import time
 
 from ppadb.client import Client as AdbClient
@@ -26,7 +27,7 @@ devices = adb.devices()
 
 if len(devices) == 0:
     print('no device attached')
-    quit()
+    sys.exit()
 
 device = devices[0]
 
