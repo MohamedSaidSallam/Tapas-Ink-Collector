@@ -66,6 +66,14 @@ timesDone = 0
 startHour = datetime.datetime.now().hour
 maxTimes = config["maxTimes"]
 
+
+def reset(newStartHour):
+    global timesDone, startHour
+    startHour = newStartHour
+    timesDone = 0
+    launchSequence()
+
+
 while True:
     print('waiting for watch video')
     pullForPixelKey('watchVideoButton',
@@ -114,15 +122,17 @@ while True:
     print('timesDone == maxTimes', timesDone == maxTimes)
 
     if startHour != currentTime.hour:
-        startHour = currentTime.hour
-        timesDone = 0
-        launchSequence()
+        print('An hour passed, Restarting')
+        reset(currentTime.hour)
     elif timesDone == maxTimes:
         nextHour = datetime.datetime(
-            currentTime.year, currentTime.month, currentTime.day + ((startHour+1) // 24), (startHour+1) % 24)
+            currentTime.year,
+            currentTime.month,
+            currentTime.day + ((startHour+1) // 24),
+            (startHour+1) % 24
+        )
         sleepTime = (nextHour - currentTime).total_seconds()
         print(f'Sleeping for {sleepTime}s')
         time.sleep(sleepTime)
-        startHour = datetime.datetime.now().hour
-        timesDone = 0
-        launchSequence()
+
+        reset(datetime.datetime.now().hour)
