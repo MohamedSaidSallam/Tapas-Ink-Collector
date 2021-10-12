@@ -50,11 +50,14 @@ def launchSequence():
     device.shell(
         f'monkey -p {config["appName"]} -c android.intent.category.LAUNCHER 1')
 
-    time.sleep(1) # wait for splash screen to appear in case the app was already open
+    # wait for splash screen to appear in case the app was already open
+    # since it see the previous bottom nav as if it's
+    time.sleep(1)
     print('waiting for splash screen')
     pullForPixelKey("menuButton",
                     "menuButtonBackground")
 
+    time.sleep(1)
     tapLocaltion("menuButton")
 
     tapLocaltion("freeInk")
