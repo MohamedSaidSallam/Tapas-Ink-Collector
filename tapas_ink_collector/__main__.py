@@ -87,6 +87,7 @@ def reset(newStartHour):
 
 
 while True:
+    ###################### Tap Watch Video ######################
     print('waiting for watch video')
     pullForPixelKey('watchVideoButton',
                     "watchVideoButtonBackground")
@@ -105,7 +106,9 @@ while True:
                         "watchVideoButtonBackground", sleepAmount=1)
 
         tapLocaltion('watchVideoButton')
+    ###################### Tap Watch Video END ######################
 
+    ###################### AD Part ######################
     print('waiting for ad to end')
 
     time.sleep(config["adSleepAmount"])
@@ -118,12 +121,15 @@ while True:
     tapLocaltion('adClose')  # close ad
 
     print('waiting for ad to end: Done')
+    ###################### AD Part: END ######################
 
+    ###################### Claim Reward ######################
     print('waiting to claim ink')
     pullForPixelKey("claimInk",
                     "claimInkBackground")
 
     tapLocaltion("claimInk")
+    ###################### Claim Reward: END ######################
 
     timesDone += 1
     print('timesDone', timesDone)
