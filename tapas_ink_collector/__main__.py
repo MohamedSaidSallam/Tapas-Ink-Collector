@@ -11,20 +11,6 @@ def isColorEqual(color1, color2):
     return color1[0] == color2[0] and color1[1] == color2[1] and color1[2] == color2[2]
 
 
-def pullForPixel(x, y, color, sleepAmount=0.5):
-    while True:
-        pixel = getPixel(device, x, y)
-        print(pixel)
-        if isColorEqual(pixel, color):
-            break
-        time.sleep(sleepAmount)
-
-
-def pullForPixelKey(locationKey, colorKey, **kargs):
-    pullForPixel(*config["locations"][locationKey],
-                 config["colors"][colorKey], **kargs)
-
-
 def tap(location):
     device.shell(f'input tap {location[0]} {location[1]}')
 
@@ -61,6 +47,29 @@ def launchSequence():
     tapLocaltion("menuButton")
 
     tapLocaltion("freeInk")
+
+
+def pullForPixel(x, y, color, sleepAmount=0.5, timeoutCallBack=launchSequence):
+    count = 0
+    while True:
+        pixel = getPixel(device, x, y)
+
+        print(
+            f'pulling pixel, Count: {count}, Pixel: {pixel}, Target: {color}')
+
+        if isColorEqual(pixel, color):
+            break
+
+        count += 1
+        if count == 100:
+            timeoutCallBack()
+            break
+        time.sleep(sleepAmount)
+
+
+def pullForPixelKey(locationKey, colorKey, **kargs):
+    pullForPixel(*config["locations"][locationKey],
+                 config["colors"][colorKey], **kargs)
 
 
 launchSequence()
