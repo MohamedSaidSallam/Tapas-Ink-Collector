@@ -114,12 +114,17 @@ while True:
 
     time.sleep(config["adSleepAmount"])
 
-    if isColorEqual(getPixel(device, *config["locations"]['watchVideoButton']), config["colors"]["watchVideoButtonBackground"]):
+    if isColorEqual(
+        getPixel(
+            device,
+            *config["locations"]['watchVideoButton']),
+        config["colors"]["watchVideoButtonBackground"]
+    ):
         print('the ad was a lie')
         continue
 
-    device.shell(f'input keyevent 4')  # go back
-    tapLocaltion('adClose')  # close ad
+    device.shell('input keyevent 4')  # go back
+    tapLocaltion('adClose')
 
     print('waiting for ad to end: Done')
     ###################### AD Part: END ######################
